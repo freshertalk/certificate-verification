@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate Verification - FresherTalk Digital Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,27 +13,24 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(to bottom, #E6F0FA, #FFFFFF);
             color: #000000;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
         header {
-            background-color: #E6F0FA;
-            padding: 10px 20px;
-            /* Reduced padding to minimize top space */
+            padding: 20px;
             text-align: center;
-            margin-bottom: 20px;
-            /* Reduced margin for compactness */
         }
 
         header h1 {
             font-size: 28px;
-            color: #005BEA;
-            font-weight: 600;
+            color: #005B96;
+            font-weight: bold;
         }
 
         main {
@@ -42,40 +38,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .verification-container {
             background-color: #FFFFFF;
-            padding: 25px;
+            padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             text-align: center;
-            animation: fadeIn 0.7s ease-in forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         h2 {
-            color: #005BEA;
+            color: #005B96;
             font-size: 24px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         label {
@@ -92,127 +76,59 @@
             border-radius: 8px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         input[type="text"]:focus {
-            border-color: #005BEA;
-            box-shadow: 0 0 5px rgba(0, 91, 234, 0.3);
+            border-color: #005B96;
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #005BEA;
+            background-color: #005B96;
             color: #FFFFFF;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #0041A8;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transform: scale(1.02);
-        }
-
-        button:active {
-            transform: scale(0.98);
+            background-color: #004080;
         }
 
         .result {
-            margin-top: 15px;
+            margin-top: 25px;
             padding: 15px;
             border-radius: 8px;
-            font-size: 16px;
-            text-align: left;
+            font-size: 14px;
             display: none;
-            opacity: 0;
-        }
-
-        .result.show {
-            display: block;
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .success {
             background-color: #E6FFE6;
-            color: #000000;
+            color: #2D862D;
             border: 1px solid #B3FFB3;
         }
 
         .error {
-            background-color: #FFEBEE;
-            color: #D32F2F;
+            background-color: #FFE6E6;
+            color: #B32424;
             border: 1px solid #FFCCCC;
         }
 
-        .result-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        dl {
-            margin-top: 10px;
-        }
-
-        dt {
-            font-weight: bold;
-            color: #005BEA;
-        }
-
-        dd {
-            margin-bottom: 10px;
-        }
-
         footer {
-            background-color: #f9f9f9;
+            background-color: #F9F9F9;
             padding: 15px;
             text-align: center;
             font-size: 12px;
             color: #555;
-            margin-top: 30px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #E0E0E0;
         }
 
         .company-details p {
             margin: 3px 0;
-        }
-
-        @media (max-width: 600px) {
-            .verification-container {
-                padding: 20px;
-            }
-
-            header h1 {
-                font-size: 24px;
-            }
-
-            h2 {
-                font-size: 20px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-
-            footer {
-                font-size: 10px;
-            }
         }
     </style>
 </head>
@@ -223,7 +139,7 @@
     </header>
     <main>
         <div class="verification-container">
-            <h2>Verify YOUR Certificate</h2>
+            <h2>Verify Your Certificate</h2>
             <form id="verificationForm">
                 <div class="form-group">
                     <label for="certId">Certificate ID</label>
@@ -236,10 +152,10 @@
     </main>
     <footer>
         <div class="company-details">
-            <p>MSME URN: UDYAM-UP-30-0037331 || Registration No.: UPSA66715491 || GSTIN: 09BMEPT8758F1ZD || Approved by
-                AICTE, New Delhi, for offering internships</p>
-            <p>Address: Aurangabad, Ghazipur, 233001, Uttar Pradesh, India || Website: https://freshertalk.in || Email
-                ID: campus@freshertalk.in || Mobile No.: +91-9535039501</p>
+            <p>MSME URN: UDYAM-UP-30-0037331 || Registration No.: UPSA66715491</p>
+            <p>GSTIN: 09BMEPT8758F1ZD || Approved by AICTE, New Delhi, for offering internships</p>
+            <p>Address: Aurangabad, Ghazipur, 233001, Uttar Pradesh, India</p>
+            <p>Website: https://freshertalk.in || Email: campus@freshertalk.in || Mobile: +91-9535039501</p>
         </div>
     </footer>
     <script>
@@ -248,31 +164,43 @@
             const certId = document.getElementById('certId').value.trim().toUpperCase();
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'none';
-            resultDiv.classList.remove('success', 'error', 'show');
+            resultDiv.classList.remove('success', 'error');
 
-            const dummyCertificates = [
-                { id: 'CERT456', name: 'Jane Smith', course: 'Data Science', date: '2023-02-15' }
-            ];
-            const certificate = dummyCertificates.find(cert => cert.id === certId);
-
-            if (certificate) {
-                resultDiv.innerHTML = `
-                    <p><span class="result-icon">✔</span><strong>Certificate Found</strong></p>
-                    <dl>
-                        <dt>Name</dt>
-                        <dd>${certificate.name}</dd>
-                        <dt>Course</dt>
-                        <dd>${certificate.course}</dd>
-                        <dt>Date Issued</dt>
-                        <dd>${certificate.date}</dd>
-                    </dl>
-                `;
-                resultDiv.classList.add('success');
-            } else {
-                resultDiv.innerHTML = '<p><span class="result-icon">❌</span> No certificate found with this ID.</p>';
-                resultDiv.classList.add('error');
-            }
-            resultDiv.classList.add('show');
+            fetch('certificates.csv')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load certificates.csv');
+                    return response.text();
+                })
+                .then(data => {
+                    const rows = data.split('\n').filter(row => row.trim() !== '');
+                    const headers = rows[0].split(',');
+                    const certificates = rows.slice(1).map(row => {
+                        const values = row.split(',');
+                        return headers.reduce((obj, header, index) => {
+                            obj[header.trim()] = values[index].trim();
+                            return obj;
+                        }, {});
+                    });
+                    const certificate = certificates.find(cert => cert.id === certId);
+                    if (certificate) {
+                        resultDiv.innerHTML = `
+                            <p><strong>Name:</strong> ${certificate.name}</p>
+                            <p><strong>Course:</strong> ${certificate.course}</p>
+                            <p><strong>Date Issued:</strong> ${certificate.date}</p>
+                        `;
+                        resultDiv.classList.add('success');
+                    } else {
+                        resultDiv.innerHTML = 'No certificate found with this ID.';
+                        resultDiv.classList.add('error');
+                    }
+                    resultDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = 'Error: Unable to verify certificate at this time.';
+                    resultDiv.classList.add('error');
+                    resultDiv.style.display = 'block';
+                    console.error(error);
+                });
         });
     </script>
 </body>
