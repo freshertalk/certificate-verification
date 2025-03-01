@@ -13,45 +13,64 @@
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #E6F0FA;
+            background: linear-gradient(to bottom, rgba(230, 240, 250, 0.9), rgba(255, 255, 255, 0.9)), 
+                        url('https://www.transparenttextures.com/patterns/diagonal-lines.png');
+            background-size: cover;
             color: #000000;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
         header {
-            background-color: #E6F0FA;
+            background-color: transparent;
             padding: 20px;
             text-align: center;
+            margin-bottom: 40px;
         }
         header h1 {
-            font-size: 28px;
-            color: #005BEA;
+            font-size: 32px;
             font-weight: 600;
+            background: linear-gradient(to right, #005BEA, #00C4B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         main {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
         .verification-container {
             background-color: #FFFFFF;
-            padding: 40px;
+            padding: 25px;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 550px;
+            max-width: 500px;
             text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.7s ease-in forwards;
+            transition: border 0.3s ease;
+        }
+        .verification-container:hover {
+            border: 2px solid #005BEA;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h2 {
             color: #005BEA;
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            position: relative;
         }
         label {
             display: block;
@@ -59,17 +78,29 @@
             color: #000000;
             margin-bottom: 8px;
         }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper::before {
+            content: '📜';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
         input[type="text"] {
             width: 100%;
-            padding: 12px;
+            padding: 12px 12px 12px 40px;
             border: 1px solid #D3D3D3;
             border-radius: 8px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         input[type="text"]:focus {
             border-color: #005BEA;
+            box-shadow: 0 0 5px rgba(0, 91, 234, 0.3);
         }
         button {
             width: 100%;
@@ -80,22 +111,50 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            position: relative;
         }
         button:hover {
             background-color: #0041A8;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
         }
         button:active {
             transform: scale(0.98);
         }
+        button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFFFFF;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
         .result {
-            margin-top: 25px;
+            margin-top: 15px;
             padding: 15px;
             border-radius: 8px;
             font-size: 16px;
             text-align: left;
             display: none;
+            opacity: 0;
+        }
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .success {
             background-color: #E6FFE6;
@@ -122,14 +181,29 @@
             margin-bottom: 10px;
         }
         footer {
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
             padding: 20px;
             text-align: center;
             font-size: 14px;
             color: #333;
+            margin-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .company-details {
+            max-width: 500px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 0.7s ease-in forwards 0.3s;
         }
         .company-details p {
             margin: 5px 0;
+            font-weight: 300;
+        }
+        .company-details p:first-child {
+            font-weight: 600;
+            text-decoration: underline;
+            color: #005BEA;
+            margin-bottom: 10px;
         }
         @media (max-width: 600px) {
             .verification-container {
@@ -157,7 +231,9 @@
             <form id="verificationForm">
                 <div class="form-group">
                     <label for="certId">Certificate ID</label>
-                    <input type="text" id="certId" name="certId" placeholder="e.g., CERT123" required>
+                    <div class="input-wrapper">
+                        <input type="text" id="certId" name="certId" placeholder="e.g., CERT123" required>
+                    </div>
                 </div>
                 <button type="submit">Verify Certificate</button>
             </form>
@@ -166,7 +242,7 @@
     </main>
     <footer>
         <div class="company-details">
-            <p><strong>Company Details:</strong></p>
+            <p>Company Details:</p>
             <p>Address: Aurangabad, Ghazipur, Uttar Pradesh.</p>
             <p>MSME URN: UDYAM-UP-30-0037331</p>
             <p>Registration No.: UPSA66715491</p>
@@ -180,8 +256,11 @@
             
             const certId = document.getElementById('certId').value.trim().toUpperCase();
             const resultDiv = document.getElementById('result');
+            const button = document.querySelector('button[type="submit"]');
+            
             resultDiv.style.display = 'none';
-            resultDiv.classList.remove('success', 'error');
+            resultDiv.classList.remove('success', 'error', 'show');
+            button.classList.add('loading');
             
             fetch('certificates.csv')
                 .then(response => response.text())
@@ -197,6 +276,8 @@
                     });
                     
                     const certificate = certificates.find(cert => cert.id === certId);
+                    
+                    button.classList.remove('loading');
                     
                     if (certificate) {
                         resultDiv.innerHTML = `
@@ -215,13 +296,14 @@
                         resultDiv.innerHTML = '<p><span class="result-icon">❌</span> No certificate found with this ID.</p>';
                         resultDiv.classList.add('error');
                     }
-                    resultDiv.style.display = 'block';
+                    resultDiv.classList.add('show');
                 })
                 .catch(error => {
                     console.error('Error fetching CSV:', error);
+                    button.classList.remove('loading');
                     resultDiv.innerHTML = '<p><span class="result-icon">❌</span> Error verifying certificate. Please try again later.</p>';
                     resultDiv.classList.add('error');
-                    resultDiv.style.display = 'block';
+                    resultDiv.classList.add('show');
                 });
         });
     </script>
