@@ -42,27 +42,14 @@
         }
 
         .verification-container {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 550px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
             animation: fadeIn 1s ease-in;
-        }
-
-        .verification-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
-            z-index: -1;
         }
 
         h2 {
@@ -74,7 +61,6 @@
 
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
 
         label {
@@ -184,10 +170,6 @@
             h2 {
                 font-size: 20px;
             }
-
-            button {
-                font-size: 14px;
-            }
         }
     </style>
 </head>
@@ -201,8 +183,8 @@
             <h2>Verify Your Certificate</h2>
             <form id="verificationForm">
                 <div class="form-group">
-                    <label for="certId">Please Enter the Certificate ID:</label>
-                    <input type="text" id="certId" name="certId" placeholder="e.g., FT-WS-202502000" required>
+                    <label for="certId">Certificate ID</label>
+                    <input type="text" id="certId" name="certId" placeholder="e.g., CERT123" required>
                 </div>
                 <button type="submit">Verify Certificate</button>
             </form>
@@ -211,11 +193,11 @@
     </main>
     <footer>
         <div class="company-details">
-            <p>Address: Aurangabad, Ghazipur, 233001, Uttar Pradesh, India</p>
+            <p>Address: Aurangabad, Ghazipur, Uttar Pradesh.</p>
             <p>MSME URN: UDYAM-UP-30-0037331</p>
             <p>Registration No.: UPSA66715491</p>
             <p>GSTIN: 09BMEPT8758F1ZD</p>
-            <p>Approved by AICTE, New Delhi, for offering internships</p>
+            <p>Approved by AICTE, New Delhi, for offering internships.</p>
         </div>
     </footer>
     <script>
@@ -231,22 +213,29 @@
 
             fetch('certificates.csv')
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to load certificates.csv');
+                    if (!response.ok) {
+                        throw new Error('Unable to load the certificates file. Please check if certificates.csv exists.');
+                    }
                     return response.text();
                 })
                 .then(data => {
                     const rows = data.split('\n').filter(row => row.trim() !== '');
+                    if (rows.length < 2) {
+                        throw new Error('Certificates file is empty or malformed.');
+                    }
                     const headers = rows[0].split(',').map(header => header.trim());
                     const certificates = rows.slice(1).map(row => {
                         const values = row.split(',').map(value => value.trim());
                         return headers.reduce((obj, header, index) => {
-                            obj[header] = values[index];
+                            obj[header] = values[index] || 'N/A';
                             return obj;
                         }, {});
                     });
+
                     const certificate = certificates.find(cert => cert.id === certId);
                     button.textContent = 'Verify Certificate';
                     button.disabled = false;
+
                     if (certificate) {
                         resultDiv.innerHTML = `
                             <p><strong>This is a valid certificate!</strong></p>
@@ -264,10 +253,10 @@
                 .catch(error => {
                     button.textContent = 'Verify Certificate';
                     button.disabled = false;
-                    resultDiv.innerHTML = '<p><strong>Error verifying certificate.</strong> Please try again later.</p>';
+                    resultDiv.innerHTML = `<p><strong>Error:</strong> ${error.message} Please try again later.</p>`;
                     resultDiv.classList.add('error');
                     resultDiv.classList.add('show');
-                    console.error(error);
+                    console.error('Verification Error:', error);
                 });
         });
     </script>
