@@ -42,14 +42,13 @@
         }
 
         .verification-container {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #FFFFFF;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 550px;
             text-align: center;
-            animation: fadeIn 1s ease-in;
         }
 
         h2 {
@@ -146,18 +145,6 @@
             margin: 3px 0;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         @media (max-width: 600px) {
             .verification-container {
                 padding: 20px;
@@ -193,11 +180,11 @@
     </main>
     <footer>
         <div class="company-details">
-            <p>Address: Aurangabad, Ghazipur, Uttar Pradesh.</p>
             <p>MSME URN: UDYAM-UP-30-0037331</p>
             <p>Registration No.: UPSA66715491</p>
             <p>GSTIN: 09BMEPT8758F1ZD</p>
-            <p>Approved by AICTE, New Delhi, for offering internships.</p>
+            <p>Approved by AICTE, New Delhi, for offering internships</p>
+            <p>Address: Aurangabad, Ghazipur, Uttar Pradesh</p>
         </div>
     </footer>
     <script>
@@ -232,7 +219,7 @@
                         }, {});
                     });
 
-                    const certificate = certificates.find(cert => cert.id === certId);
+                    const certificate = certificates.find(cert => cert.id.toUpperCase() === certId);
                     button.textContent = 'Verify Certificate';
                     button.disabled = false;
 
