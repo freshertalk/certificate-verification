@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate Verification - FresherTalk Digital Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,10 +14,9 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(to bottom, #E6F0FA, #FFFFFF);
             color: #000000;
-            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -30,7 +30,7 @@
         header h1 {
             font-size: 28px;
             color: #005B96;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         main {
@@ -42,24 +42,39 @@
         }
 
         .verification-container {
-            background-color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 550px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .verification-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+            z-index: -1;
         }
 
         h2 {
             color: #005B96;
             font-size: 24px;
             margin-bottom: 20px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         label {
@@ -67,6 +82,7 @@
             font-size: 16px;
             color: #000000;
             margin-bottom: 8px;
+            text-align: left;
         }
 
         input[type="text"] {
@@ -76,6 +92,7 @@
             border-radius: 8px;
             font-size: 16px;
             outline: none;
+            transition: border-color 0.3s;
         }
 
         input[type="text"]:focus {
@@ -91,11 +108,16 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
             background-color: #004080;
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         .result {
@@ -104,6 +126,13 @@
             border-radius: 8px;
             font-size: 14px;
             display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .result.show {
+            display: block;
+            opacity: 1;
         }
 
         .success {
@@ -130,6 +159,36 @@
         .company-details p {
             margin: 3px 0;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .verification-container {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -142,8 +201,8 @@
             <h2>Verify Your Certificate</h2>
             <form id="verificationForm">
                 <div class="form-group">
-                    <label for="certId">Please Enter the Certificate ID</label>
-                    <input type="text" id="certId" name="certId" placeholder="e.g., FT-WS-202500000" required>
+                    <label for="certId">Please Enter the Certificate ID:</label>
+                    <input type="text" id="certId" name="certId" placeholder="e.g., FT-WS-202502000" required>
                 </div>
                 <button type="submit">Verify Certificate</button>
             </form>
@@ -152,10 +211,11 @@
     </main>
     <footer>
         <div class="company-details">
-            <p>MSME URN: UDYAM-UP-30-0037331 || Registration No.: UPSA66715491</p>
-            <p>GSTIN: 09BMEPT8758F1ZD || Approved by AICTE, New Delhi, for offering internships</p>
             <p>Address: Aurangabad, Ghazipur, 233001, Uttar Pradesh, India</p>
-            <p>Website: https://freshertalk.in || Email: campus@freshertalk.in || Mobile: +91-9535039501</p>
+            <p>MSME URN: UDYAM-UP-30-0037331</p>
+            <p>Registration No.: UPSA66715491</p>
+            <p>GSTIN: 09BMEPT8758F1ZD</p>
+            <p>Approved by AICTE, New Delhi, for offering internships</p>
         </div>
     </footer>
     <script>
@@ -163,8 +223,11 @@
             event.preventDefault();
             const certId = document.getElementById('certId').value.trim().toUpperCase();
             const resultDiv = document.getElementById('result');
+            const button = document.querySelector('button[type="submit"]');
+            button.textContent = 'Verifying...';
+            button.disabled = true;
             resultDiv.style.display = 'none';
-            resultDiv.classList.remove('success', 'error');
+            resultDiv.classList.remove('success', 'error', 'show');
 
             fetch('certificates.csv')
                 .then(response => {
@@ -173,32 +236,37 @@
                 })
                 .then(data => {
                     const rows = data.split('\n').filter(row => row.trim() !== '');
-                    const headers = rows[0].split(',');
+                    const headers = rows[0].split(',').map(header => header.trim());
                     const certificates = rows.slice(1).map(row => {
-                        const values = row.split(',');
+                        const values = row.split(',').map(value => value.trim());
                         return headers.reduce((obj, header, index) => {
-                            obj[header.trim()] = values[index].trim();
+                            obj[header] = values[index];
                             return obj;
                         }, {});
                     });
                     const certificate = certificates.find(cert => cert.id === certId);
+                    button.textContent = 'Verify Certificate';
+                    button.disabled = false;
                     if (certificate) {
                         resultDiv.innerHTML = `
+                            <p><strong>This is a valid certificate!</strong></p>
                             <p><strong>Name:</strong> ${certificate.name}</p>
                             <p><strong>Course:</strong> ${certificate.course}</p>
                             <p><strong>Date Issued:</strong> ${certificate.date}</p>
                         `;
                         resultDiv.classList.add('success');
                     } else {
-                        resultDiv.innerHTML = 'No certificate found with this ID.';
+                        resultDiv.innerHTML = '<p><strong>Not a valid certificate.</strong> Please check the Certificate ID and try again.</p>';
                         resultDiv.classList.add('error');
                     }
-                    resultDiv.style.display = 'block';
+                    resultDiv.classList.add('show');
                 })
                 .catch(error => {
-                    resultDiv.innerHTML = 'Error: Unable to verify certificate at this time.';
+                    button.textContent = 'Verify Certificate';
+                    button.disabled = false;
+                    resultDiv.innerHTML = '<p><strong>Error verifying certificate.</strong> Please try again later.</p>';
                     resultDiv.classList.add('error');
-                    resultDiv.style.display = 'block';
+                    resultDiv.classList.add('show');
                     console.error(error);
                 });
         });
