@@ -23,13 +23,16 @@
         }
 
         header {
+            background-color: #E6F0FA;
             padding: 20px;
             text-align: center;
+            margin-bottom: 40px;
+            /* Reduced from ~100-120px */
         }
 
         header h1 {
             font-size: 28px;
-            color: #005B96;
+            color: #005BEA;
             font-weight: 600;
         }
 
@@ -38,28 +41,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         .verification-container {
             background-color: #FFFFFF;
-            padding: 40px;
+            padding: 25px;
+            /* Reduced internal padding */
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 550px;
+            max-width: 500px;
+            /* Increased from ~300px */
             text-align: center;
         }
 
         h2 {
-            color: #005B96;
+            color: #005BEA;
             font-size: 24px;
-            margin-bottom: 20px;
-            font-weight: 600;
+            margin-bottom: 15px;
+            /* Reduced from ~30-40px */
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            /* Reduced from ~20-30px */
         }
 
         label {
@@ -67,7 +73,6 @@
             font-size: 16px;
             color: #000000;
             margin-bottom: 8px;
-            text-align: left;
         }
 
         input[type="text"] {
@@ -81,24 +86,24 @@
         }
 
         input[type="text"]:focus {
-            border-color: #005B96;
+            border-color: #005BEA;
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #005B96;
+            background-color: #005BEA;
             color: #FFFFFF;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
         }
 
         button:hover {
-            background-color: #004080;
-            transform: scale(1.02);
+            background-color: #0041A8;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         button:active {
@@ -106,43 +111,64 @@
         }
 
         .result {
-            margin-top: 25px;
+            margin-top: 15px;
+            /* Reduced from ~25px */
             padding: 15px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
+            text-align: left;
             display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .result.show {
-            display: block;
-            opacity: 1;
         }
 
         .success {
             background-color: #E6FFE6;
-            color: #2D862D;
+            color: #000000;
             border: 1px solid #B3FFB3;
         }
 
         .error {
-            background-color: #FFE6E6;
-            color: #B32424;
+            background-color: #FFEBEE;
+            color: #D32F2F;
             border: 1px solid #FFCCCC;
         }
 
+        .result-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        dl {
+            margin-top: 10px;
+        }
+
+        dt {
+            font-weight: bold;
+            color: #005BEA;
+        }
+
+        dd {
+            margin-bottom: 10px;
+        }
+
         footer {
-            background-color: #F9F9F9;
-            padding: 15px;
+            background-color: #f9f9f9;
+            padding: 20px;
             text-align: center;
-            font-size: 12px;
-            color: #555;
-            border-top: 1px solid #E0E0E0;
+            font-size: 14px;
+            color: #333;
+            margin-top: 30px;
+            /* Reduced from ~80-100px */
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .company-details {
+            max-width: 500px;
+            /* Matches verification-container width */
+            margin: 0 auto;
         }
 
         .company-details p {
-            margin: 3px 0;
+            margin: 5px 0;
         }
 
         @media (max-width: 600px) {
@@ -156,6 +182,10 @@
 
             h2 {
                 font-size: 20px;
+            }
+
+            button {
+                font-size: 14px;
             }
         }
     </style>
@@ -180,70 +210,62 @@
     </main>
     <footer>
         <div class="company-details">
+            <p><strong>Company Details:</strong></p>
+            <p>Address: Aurangabad, Ghazipur, Uttar Pradesh.</p>
             <p>MSME URN: UDYAM-UP-30-0037331</p>
             <p>Registration No.: UPSA66715491</p>
             <p>GSTIN: 09BMEPT8758F1ZD</p>
-            <p>Approved by AICTE, New Delhi, for offering internships</p>
-            <p>Address: Aurangabad, Ghazipur, Uttar Pradesh</p>
+            <p>Approved by AICTE, New Delhi, for offering internships.</p>
         </div>
     </footer>
     <script>
         document.getElementById('verificationForm').addEventListener('submit', function (event) {
             event.preventDefault();
+
             const certId = document.getElementById('certId').value.trim().toUpperCase();
             const resultDiv = document.getElementById('result');
-            const button = document.querySelector('button[type="submit"]');
-            button.textContent = 'Verifying...';
-            button.disabled = true;
             resultDiv.style.display = 'none';
-            resultDiv.classList.remove('success', 'error', 'show');
+            resultDiv.classList.remove('success', 'error');
 
             fetch('certificates.csv')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Unable to load the certificates file. Please check if certificates.csv exists.');
-                    }
-                    return response.text();
-                })
+                .then(response => response.text())
                 .then(data => {
                     const rows = data.split('\n').filter(row => row.trim() !== '');
-                    if (rows.length < 2) {
-                        throw new Error('Certificates file is empty or malformed.');
-                    }
-                    const headers = rows[0].split(',').map(header => header.trim());
+                    const headers = rows[0].split(',');
                     const certificates = rows.slice(1).map(row => {
-                        const values = row.split(',').map(value => value.trim());
+                        const values = row.split(',');
                         return headers.reduce((obj, header, index) => {
-                            obj[header] = values[index] || 'N/A';
+                            obj[header.trim()] = values[index].trim();
                             return obj;
                         }, {});
                     });
 
-                    const certificate = certificates.find(cert => cert.id.toUpperCase() === certId);
-                    button.textContent = 'Verify Certificate';
-                    button.disabled = false;
+                    const certificate = certificates.find(cert => cert.id === certId);
 
                     if (certificate) {
                         resultDiv.innerHTML = `
-                            <p><strong>This is a valid certificate!</strong></p>
-                            <p><strong>Name:</strong> ${certificate.name}</p>
-                            <p><strong>Course:</strong> ${certificate.course}</p>
-                            <p><strong>Date Issued:</strong> ${certificate.date}</p>
+                            <p><span class="result-icon">✔</span><strong>Certificate Found</strong></p>
+                            <dl>
+                                <dt>Name</dt>
+                                <dd>${certificate.name}</dd>
+                                <dt>Course</dt>
+                                <dd>${certificate.course}</dd>
+                                <dt>Date Issued</dt>
+                                <dd>${certificate.date}</dd>
+                            </dl>
                         `;
                         resultDiv.classList.add('success');
                     } else {
-                        resultDiv.innerHTML = '<p><strong>Not a valid certificate.</strong> Please check the Certificate ID and try again.</p>';
+                        resultDiv.innerHTML = '<p><span class="result-icon">❌</span> No certificate found with this ID.</p>';
                         resultDiv.classList.add('error');
                     }
-                    resultDiv.classList.add('show');
+                    resultDiv.style.display = 'block';
                 })
                 .catch(error => {
-                    button.textContent = 'Verify Certificate';
-                    button.disabled = false;
-                    resultDiv.innerHTML = `<p><strong>Error:</strong> ${error.message} Please try again later.</p>`;
+                    console.error('Error fetching CSV:', error);
+                    resultDiv.innerHTML = '<p><span class="result-icon">❌</span> Error verifying certificate. Please try again later.</p>';
                     resultDiv.classList.add('error');
-                    resultDiv.classList.add('show');
-                    console.error('Verification Error:', error);
+                    resultDiv.style.display = 'block';
                 });
         });
     </script>
