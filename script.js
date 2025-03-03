@@ -5,7 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
   const toggleThemeButton = document.getElementById("toggle-theme");
 
-  // Dark mode toggle
+  // Load saved theme from local storage
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+
+  // Handle dark mode toggle
   toggleThemeButton.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
     localStorage.setItem(
@@ -14,12 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // Restore theme from local storage
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
-  }
-
-  // Form submission
+  // Handle form submission
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const certificateId = certificateInput.value.trim();
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultDiv.classList.add("hidden");
     resultDiv.innerHTML = "";
 
-    // Input validation
+    // Basic input validation
     if (!certificateId) {
       errorMessage.textContent = "Please enter a Certificate ID";
       errorMessage.classList.remove("hidden");
@@ -37,24 +37,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
+      // Fetch and parse the CSV file
       const response = await fetch("certificates.csv");
-      if (!response.ok) throw new Error("Failed to load certificates");
+      if (!response.ok) throw new Error("Failed to fetch certificates");
       const text = await response.text();
       const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
       if (parsed.errors.length > 0) throw new Error("Error parsing CSV");
+
+      // Find the certificate
       const certificates = parsed.data;
       const certificate = certificates.find(
         (cert) => cert.certificate_id === certificateId
       );
+
       if (certificate) {
+        // Display certificate details with Copy ID button
         resultDiv.innerHTML = `
-                  <i class="fas fa-check-circle icon"></i>
-                  <h3>Certificate Found</h3>
-                  <p><strong>Certificate ID:</strong> ${certificate.certificate_id}</p>
-                  <p><strong>Name:</strong> ${certificate.name}</p>
-                  <p><strong>Course:</strong> ${certificate.course}</p>
-                  <p><strong>Date Issued:</strong> ${certificate.date_issued}</p>
-              `;
+                    <i class="fas fa-check-circle icon"></i>
+                    <h3>Certificate Found</h3>
+                    <p><strong>Certificate ID:</strong> ${certificate.certificate_id}</p>
+                    <p><strong>Name:</strong> ${certificate.name}</p>
+                    <p><strong>Course:</strong> ${certificate.course}</p>
+                    <p><strong>Date Issued:</strong> ${certificate.date_issued}</p>
+                    <button class="copy-button" onclick="copyToClipboard('${certificate.certificate_id}')">Copy ID</button>
+                `;
         resultDiv.classList.remove("hidden");
       } else {
         errorMessage.textContent =
@@ -66,4 +72,16 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMessage.classList.remove("hidden");
     }
   });
+
+  // Function to copy certificate ID to clipboard
+  window.copyToClipboard = function (text) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        alert("Certificate ID copied to clipboard");
+      })
+      .catch(() => {
+        alert("Failed to copy");
+      });
+  };
 });
