@@ -132,7 +132,7 @@ body.dark-mode input:not(:placeholder-shown)+label {
 .verify-button {
     background: linear-gradient(135deg, #1A73E8, #14B8A6);
     color: white;
-    padding: 12px 20px;
+    padding: 5px 15px;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
@@ -225,7 +225,7 @@ body.dark-mode .theme-toggle:hover {
 }
 
 .footer a {
-    color: #F472B6;
+    color: white;
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -263,18 +263,6 @@ body.dark-mode .theme-toggle:hover {
 
     to {
         opacity: 1;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
     }
 }
 

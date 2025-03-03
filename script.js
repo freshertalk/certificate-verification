@@ -23,12 +23,19 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const certificateId = certificateInput.value.trim();
+
+    // Clear previous messages
+    errorMessage.classList.add("hidden");
+    resultDiv.classList.add("hidden");
+    resultDiv.innerHTML = "";
+
+    // Input validation
     if (!certificateId) {
       errorMessage.textContent = "Please enter a Certificate ID";
       errorMessage.classList.remove("hidden");
-      resultDiv.classList.add("hidden");
       return;
     }
+
     try {
       const response = await fetch("certificates.csv");
       if (!response.ok) throw new Error("Failed to load certificates");
@@ -41,24 +48,22 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       if (certificate) {
         resultDiv.innerHTML = `
-                    <i class="fas fa-check-circle icon"></i>
-                    <h3>Certificate Found</h3>
-                    <p><strong>Certificate ID:</strong> ${certificate.certificate_id}</p>
-                    <p><strong>Name:</strong> ${certificate.name}</p>
-                    <p><strong>Course:</strong> ${certificate.course}</p>
-                    <p><strong>Date Issued:</strong> ${certificate.date_issued}</p>
-                `;
+                  <i class="fas fa-check-circle icon"></i>
+                  <h3>Certificate Found</h3>
+                  <p><strong>Certificate ID:</strong> ${certificate.certificate_id}</p>
+                  <p><strong>Name:</strong> ${certificate.name}</p>
+                  <p><strong>Course:</strong> ${certificate.course}</p>
+                  <p><strong>Date Issued:</strong> ${certificate.date_issued}</p>
+              `;
         resultDiv.classList.remove("hidden");
-        errorMessage.classList.add("hidden");
       } else {
-        errorMessage.textContent = "Certificate not found";
+        errorMessage.textContent =
+          "The certificate ID you entered was not found in our records.";
         errorMessage.classList.remove("hidden");
-        resultDiv.classList.add("hidden");
       }
     } catch (error) {
-      errorMessage.textContent = error.message;
+      errorMessage.textContent = `Error: ${error.message}`;
       errorMessage.classList.remove("hidden");
-      resultDiv.classList.add("hidden");
     }
   });
 });
